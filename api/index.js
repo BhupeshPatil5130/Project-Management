@@ -8,7 +8,7 @@ import cors from 'cors';
 
 const app =express();
 
-const PORT=5000;
+const PORT=5000 ||process.env.PORT;
 app.use(express.json());
 app.use("/api/v1",router);
 dotenv.config();
