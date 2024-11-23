@@ -17,7 +17,10 @@ export const createPractical = async (req, res) => {
 
     const savedPractical = await newPractical.save();
 
-    res.status(201).json({ message: "Practical has been successfully created.", practical: savedPractical });
+    res.status(201).json({
+      message: "Practical has been successfully created.",
+      practical: savedPractical,
+    });
   } catch (error) {
     res.status(500).json({ message: `Failed to create practical: ${error.message}` });
   }
@@ -28,9 +31,13 @@ export const getPracticals = async (req, res) => {
     const practicals = await Practical.find()
       .populate("subjectId", "name code")
       .populate("createdBy", "name email role")
-      .populate("enrolledStudents", "name email");
+      .populate("enrolledStudents", "name email")
+      .lean();
 
-    res.status(200).json({ message: "Successfully retrieved practicals.", practicals });
+    res.status(200).json({
+      message: "Successfully retrieved practicals.",
+      practicals,
+    });
   } catch (error) {
     res.status(500).json({ message: `Failed to retrieve practicals: ${error.message}` });
   }
@@ -50,14 +57,19 @@ export const enrollInPractical = async (req, res) => {
       { new: true }
     )
       .populate("subjectId", "name code")
-      .populate("enrolledStudents", "name email");
+      .populate("enrolledStudents", "name email")
+      .lean();
 
     if (!updatedPractical) {
       return res.status(404).json({ message: "Practical not found." });
     }
 
-    res.status(200).json({ message: "Enrollment successful.", practical: updatedPractical });
+    res.status(200).json({
+      message: "Enrollment successful.",
+      practical: updatedPractical,
+    });
   } catch (error) {
     res.status(500).json({ message: `Failed to enroll in practical: ${error.message}` });
   }
 };
+
